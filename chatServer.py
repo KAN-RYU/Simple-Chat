@@ -54,16 +54,21 @@ if __name__ == "__main__":
     sender.start()
     
     receiver = []
+    serverSock.setblocking(False)
     while True:
-        connectionSock, addr = serverSock.accept()
-        lock.acquire()
-        client.append((connectionSock, name[nameIndex], addr))
-        print('Connected from', addr, 'Name is', name[nameIndex])
-        connectionSock.send(str('Your name is ' + name[nameIndex] + '.').encode('utf-8'))
-        receiver.append(threading.Thread(target=receive, args=(connectionSock, name[nameIndex], addr)))
-        receiver[-1].daemon = True
-        receiver[-1].start()
-        nameIndex = (nameIndex + 1) % 8
-        lock.release()
+        try:
+            connectionSock, addr = serverSock.accept()
+            lock.acquire()
+            nickname = name[nameIndex] + '_' + str(nameIndex)
+            client.append((connectionSock, nickname, addr))
+            print('Connected from', addr, 'Nickname is', nickname)
+            connectionSock.send(str('Your name is ' + nickname + '.').encode('utf-8'))
+            receiver.append(threading.Thread(target=receive, args=(connectionSock, nickname, addr)))
+            receiver[-1].daemon = True
+            receiver[-1].start()
+            nameIndex = (nameIndex + 1) % 8
+            lock.release()
+        except:
+            time.sleep(0.01)
     
     serverSock.close()
