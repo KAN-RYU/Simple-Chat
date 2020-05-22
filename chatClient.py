@@ -35,10 +35,17 @@ class ChatWindow(QMainWindow, form_class) :
     def networkRunner(self):
         port = 8081
         
-        self.clientSock.connect(('127.0.0.1', port))
-
+        while True:
+            try:
+                self.clientSock.connect(('127.0.0.1', port))
+            except:
+                self.message.emit('Server Connection failed. retry...')
+            else:
+                break
+            
         self.message.emit('Server Connected.')
-        self.message.emit('your name is.')
+        firstData = self.clientSock.recv(1024)
+        self.message.emit(firstData.decode('utf-8'))
         
         while True:
             recvData = self.clientSock.recv(1024)
@@ -49,4 +56,5 @@ if __name__ == "__main__":
     myWindow = ChatWindow() 
     myWindow.show()
     app.exec_()
+    myWindow.clientSock.close()
     
