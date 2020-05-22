@@ -8,7 +8,6 @@ from PyQt5 import uic
 
 form_class = uic.loadUiType("client.ui")[0]
 
-#화면을 띄우는데 사용되는 Class 선언
 class ChatWindow(QMainWindow, form_class) :
     message = pyqtSignal(str)
     def __init__(self) :
