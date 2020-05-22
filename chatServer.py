@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     serverSock = socket(AF_INET, SOCK_STREAM)
     serverSock.bind(('', port))
-    serverSock.listen(8)
+    serverSock.listen()
 
     print('Server Started.')
     sender = threading.Thread(target=send, args=())
