@@ -10,6 +10,8 @@ form_class = uic.loadUiType("client.ui")[0]
 
 class ChatWindow(QMainWindow, form_class) :
     message = pyqtSignal(str)
+    nickname = pyqtSignal(str)
+                      
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
@@ -22,6 +24,7 @@ class ChatWindow(QMainWindow, form_class) :
         self.network.start()
         
         self.message.connect(self.textRec)
+        self.nickname.connect(self.setTitle)
                 
     def textSend(self):
         self.clientSock.send(self.TextInput.text().encode('utf-8'))
@@ -30,6 +33,10 @@ class ChatWindow(QMainWindow, form_class) :
     @pyqtSlot(str)
     def textRec(self, message):
         self.TextReceive.append(message)
+        
+    @pyqtSlot(str)
+    def setTitle(self, nickname):
+        self.setWindowTitle(nickname)
     
     def networkRunner(self):
         port = 8081
@@ -45,6 +52,7 @@ class ChatWindow(QMainWindow, form_class) :
         self.message.emit('Server Connected.')
         firstData = self.clientSock.recv(1024)
         self.message.emit(firstData.decode('utf-8'))
+        self.nickname.emit(firstData.decode('utf-8').split(' ')[-1][:-1])
         
         while True:
             recvData = self.clientSock.recv(1024)
