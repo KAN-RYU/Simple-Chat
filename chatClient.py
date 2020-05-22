@@ -49,7 +49,7 @@ class ChatWindow(QMainWindow, form_class) :
         
         while True:
             recvData = self.clientSock.recv(1024)
-            self.message.emit('상대방 :' + recvData.decode('utf-8'))
+            self.message.emit(recvData.decode('utf-8'))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv) 

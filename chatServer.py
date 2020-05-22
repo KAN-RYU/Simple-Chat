@@ -29,9 +29,9 @@ def receive(sock, name, addr):
         
         except:
             lock.acquire()
-            message = 'Disconnected by ' + name + ' ' + str(addr[0]) + ":" + str(addr[1])
+            message = 'Disconnected by ' + name
             messageQ.put(message)
-            print(message)
+            print(message + ' ' + str(addr[0]) + ":" + str(addr[1]))
             
             for i in range(len(client)):
                 if client[i][2][0] == addr[0] and client[i][2][1] == addr[1]:
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     sender.start()
     
     receiver = []
-    serverSock.setblocking(False)
+    serverSock.settimeout(10)
     while True:
         try:
             connectionSock, addr = serverSock.accept()
