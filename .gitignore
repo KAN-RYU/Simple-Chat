@@ -6,6 +6,9 @@ debug.log
 /.vscode
 /__pycache__
 /Result/*
+/build
+/dist
 
 *.ini
+*.spec
 List.txt
