@@ -7,7 +7,7 @@ import time
 
 messageQ = Queue()
 client = []
-name = ['umjoonsik', 'abrium', 'booo', 'foo', 'chris', 'top', 'pot', 'chat']
+name = ['joonsik', 'abrium', 'booo', 'foo', 'chris', 'top', 'pot', 'chat']
 nameIndex = 0
 lock = threading.Lock()
 
