@@ -51,22 +51,25 @@ if __name__ == "__main__":
     sender.daemon = True
     sender.start()
     
-    # receiver = []
     serverSock.settimeout(10)
     while True:
         try:
-            connectionSock, addr = serverSock.accept()
-            lock.acquire()
-            nickname = name[nameIndex] + '_' + str(nameIndex)
-            client.append((connectionSock, nickname, addr))
-            print('Connected from', addr, 'Nickname is', nickname)
-            connectionSock.send(str('Your name is ' + nickname + '.').encode('utf-8'))
-            receiver = threading.Thread(target=receive, args=(connectionSock, nickname, addr))
-            receiver.daemon = True
-            receiver.start()
-            nameIndex = (nameIndex + 1) % 8
-            lock.release()
+            try:
+                connectionSock, addr = serverSock.accept()
+                lock.acquire()
+                nickname = name[nameIndex] + '_' + str(nameIndex)
+                client.append((connectionSock, nickname, addr))
+                print('Connected from', addr, 'Nickname is', nickname)
+                connectionSock.send(str('Your name is ' + nickname + '.').encode('utf-8'))
+                receiver = threading.Thread(target=receive, args=(connectionSock, nickname, addr))
+                receiver.daemon = True
+                receiver.start()
+                nameIndex = (nameIndex + 1) % 8
+                lock.release()
+            except:
+                time.sleep(0.01)
         except:
-            time.sleep(0.01)
+            break
     
+    print('Server Stopped.')
     serverSock.close()
