@@ -3,8 +3,6 @@ import threading
 from queue import Queue
 import time
 
-#TODO optimize thread list
-
 messageQ = Queue()
 client = []
 name = ['joonsik', 'abrium', 'booo', 'foo', 'chris', 'top', 'pot', 'chat']
@@ -53,7 +51,7 @@ if __name__ == "__main__":
     sender.daemon = True
     sender.start()
     
-    receiver = []
+    # receiver = []
     serverSock.settimeout(10)
     while True:
         try:
@@ -63,9 +61,9 @@ if __name__ == "__main__":
             client.append((connectionSock, nickname, addr))
             print('Connected from', addr, 'Nickname is', nickname)
             connectionSock.send(str('Your name is ' + nickname + '.').encode('utf-8'))
-            receiver.append(threading.Thread(target=receive, args=(connectionSock, nickname, addr)))
-            receiver[-1].daemon = True
-            receiver[-1].start()
+            receiver = threading.Thread(target=receive, args=(connectionSock, nickname, addr))
+            receiver.daemon = True
+            receiver.start()
             nameIndex = (nameIndex + 1) % 8
             lock.release()
         except:
